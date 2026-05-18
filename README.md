@@ -1,7 +1,7 @@
 # ThoughtSpot Agent Skills
 
-A collection of skills and tools for working with ThoughtSpot, packaged for three
-runtimes: **Claude Code**, **Snowflake Cortex (CoCo)**, and **Cursor AI**.
+A collection of skills and tools for working with ThoughtSpot, packaged for four
+runtimes: **Claude Code**, **Snowflake Cortex (CoCo)**, **Cursor AI**, and **Databricks**.
 
 ---
 
@@ -13,8 +13,10 @@ thoughtspot-agent-skills/
 │   ├── claude/     — Claude Code skills (invoked via slash commands in Claude Code)
 │   ├── coco/       — Snowflake Cortex skills (deployed in Snowsight Workspaces)
 │   ├── cursor/     — Cursor AI rules (installed via symlinks into .cursor/rules/)
+│   ├── databricks/ — Databricks notebook skills (LangChain + dbutils.secrets)
 │   └── shared/     — Shared reference files used by all runtimes
 │       ├── mappings/ts-snowflake/       — Column, join, formula, and property mapping rules (Snowflake)
+│       ├── mappings/ts-databricks/      — Type mapping and column classification rules (Databricks)
 │       ├── schemas/                     — Platform schema references (ThoughtSpot TML, Snowflake SV)
 │       └── worked-examples/snowflake/   — End-to-end Snowflake conversion examples
 ├── scripts/        — Deployment helpers (pre-commit hook, deploy gate, stage sync)
@@ -94,3 +96,28 @@ with ThoughtSpot, search metadata, export/import TML, list connections, and crea
 logical table objects. Located in [`tools/ts-cli/`](tools/ts-cli/).
 
 Commands: `ts auth`, `ts metadata search`, `ts tml export/import`, `ts connections list/get/add-tables`, `ts tables create`.
+
+---
+
+## Databricks Skills
+
+Skills for Databricks notebooks using Unity Catalog, `dbutils.secrets` for auth,
+and LangChain for agent orchestration. Runs on Serverless (CPU) or any cluster.
+
+| Skill | What it does |
+|---|---|
+| `ts-generate-tml` | Generate Table TMLs from Unity Catalog `DESCRIBE TABLE` metadata |
+| `ts-convert-from-databricks-mv` | Convert a UC Metric View (WITH METRICS LANGUAGE) into a ThoughtSpot Model TML |
+| `ts-search-data` | Query ThoughtSpot using bracket syntax, return pandas DataFrames |
+| `ts-import-tml` | Import TML files via REST API with batch support and rate limiting |
+
+**Key differences from other runtimes:**
+
+| | Claude Code | CoCo | Cursor | Databricks |
+|---|---|---|---|---|
+| Auth | macOS Keychain | Snowflake secrets | macOS Keychain | `dbutils.secrets` |
+| Compute | Local Python | Snowflake Warehouse | Local Python | Serverless / Cluster |
+| Semantic layer | TS Model TML | Snowflake Semantic View | TS Model TML | UC Metric View |
+| Agent framework | Slash commands | Stored procs | Chat triggers | LangChain tools |
+
+See **[agents/databricks/SETUP.md](agents/databricks/SETUP.md)** for prerequisites, secrets setup, and usage.
