@@ -23,6 +23,7 @@ metadata, Databricks Secrets for auth, and LangChain for agent orchestration.
 | `ts-convert-from-databricks-mv` | Convert a UC Metric View into a ThoughtSpot Model TML |
 | `ts-search-data` | Query ThoughtSpot using natural language bracket syntax |
 | `ts-import-tml` | Import TML YAML files to ThoughtSpot via REST API |
+| `ts-object-answer-promote` | Promote formulas from a saved Answer into a Model |
 
 ## Shared references used
 
